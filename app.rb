@@ -74,8 +74,20 @@ post '/visit' do
 
   if @name == ''
       @error = 'Введите имя'
-      return erb :visit
   end
+
+  if @phone == ''
+      @error = 'Введите номер телефона'
+  end
+
+  if @datetime == ''
+      @error = 'Введите дату'
+  end
+
+  if @error != ''
+    return erb :visit
+  end
+
 
 	f = File.open './public/users.txt', 'a'
 	f.write "Hairdresser:#{@Hairdresser}, User: #{@name}, phone: #{@phone}, Date and time: #{@datetime}! Color: #{@color}\n\n"
