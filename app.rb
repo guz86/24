@@ -72,21 +72,22 @@ post '/visit' do
 	@Hairdresser = params[:hairdresser]
   @color = params[:color]
 
-  if @name == ''
-      @error = 'Введите имя'
+
+  hh = {  :name => 'Введите имя',
+          :phone => 'Введите номер телефона',
+          :datetime => 'Введите дату' }
+  
+  hh.each do |key, value|
+    # если параметр пуст
+    if params[key] == ''
+      # переменной error присваиваем value из нашего хеша hh
+      # это сообщение о соотвествующей ошибке
+      @error = hh[key]
+
+      return erb :visit
+    end
   end
 
-  if @phone == ''
-      @error = 'Введите номер телефона'
-  end
-
-  if @datetime == ''
-      @error = 'Введите дату'
-  end
-
-  if @error != ''
-    return erb :visit
-  end
 
 
 	f = File.open './public/users.txt', 'a'
