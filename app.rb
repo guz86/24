@@ -72,6 +72,11 @@ post '/visit' do
 	@Hairdresser = params[:hairdresser]
   @color = params[:color]
 
+  if @name == ''
+      @error = 'Введите имя'
+      return erb :visit
+  end
+
 	f = File.open './public/users.txt', 'a'
 	f.write "Hairdresser:#{@Hairdresser}, User: #{@name}, phone: #{@phone}, Date and time: #{@datetime}! Color: #{@color}\n\n"
 	f.close
