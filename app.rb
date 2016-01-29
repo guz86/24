@@ -77,15 +77,10 @@ post '/visit' do
           :phone => 'Введите номер телефона',
           :datetime => 'Введите дату' }
   
-  hh.each do |key, value|
-    # если параметр пуст
-    if params[key] == ''
-      # переменной error присваиваем value из нашего хеша hh
-      # это сообщение о соотвествующей ошибке
-      @error = hh[key]
+  @error = hh.select {|key,_| params[key] == ""}.values.join(", ")
 
-      return erb :visit
-    end
+  if @error != ''
+    return erb :visit
   end
 
 
