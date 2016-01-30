@@ -2,6 +2,7 @@
 require 'rubygems'
 require 'sinatra'
 require 'sinatra/reloader'
+require 'pony'
 
 #sinatra_origin user_login
 configure do
@@ -57,12 +58,12 @@ get '/about' do
 	erb :about 
 end
 
-get '/visit' do
-	erb :visit 
+get '/contacts' do  
+    erb :contacts
 end
 
-get '/contacts' do
-	erb :contacts
+get '/visit' do
+	erb :visit 
 end
 
 post '/visit' do 
@@ -100,5 +101,24 @@ post '/contacts' do
 	f.write "User: #{@email}, message: #{@textarea}! \n\n"
 	f.close
 
-	erb "Thank you! We'll be write anwser on your e-mail: #{@email}!"
+#	erb "Thank you! We'll be write anwser on your e-mail: #{@email}!"
+
+
+Pony.mail(
+  :to => 'komyotpravlyaem@mail.ru',
+  :from => params[:email],
+  :subject => 'hi',
+  :body => params[:email] +" сообщение: "+ params[:textarea],
+  :via => :smtp,
+  :via_options => { 
+    :address              => 'smtp.gmail.com', 
+    :port                 => '587', 
+    :enable_starttls_auto => true, 
+    :user_name            => 'olivka1025', 
+    :password             => 'qwerty111111', 
+    :authentication       => :plain, 
+    :domain               => 'localhost.localdomain'
+  })
+#redirect '/success' 
+  erb "Thank you! We'll be write anwser on your e-mail: #{@email}!"
 end
