@@ -5,7 +5,7 @@
 
 $(function() {
   $('#color').simplecolorpicker();
-  $('#datetimepicker1').datetimepicker();
+  $('#datetimepicker').datetimepicker();
 });
 
 </script>
@@ -24,7 +24,7 @@ $(function() {
 
  <div class="form-group">
     <label>Когда вас ждать?</label>
-    <input id="datetimepicker1" kl_virtual_keyboard_secure_input="on" name="datetime" type="text" class="form-control" placeholder="Введите дату и время посещения" value="<%= @datetime %>">
+    <input id="datetimepicker" name="datetime" type="text" class="form-control" placeholder="Введите дату и время посещения" value="<%= @datetime %>">
   </div>
 
 <div class="form-group">
