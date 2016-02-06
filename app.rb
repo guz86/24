@@ -6,8 +6,8 @@ require 'pony'
 require 'sqlite3'
 
 configure do 
-  @db = SQLite3::Database.new 'barbershop.db'
-  @db.execute 'CREATE TABLE IF NOT EXISTS 
+  db = get_db
+  db.execute 'CREATE TABLE IF NOT EXISTS 
                 "Users" 
                 (
                   "id" INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -66,7 +66,7 @@ end
 
 
 get '/' do
-	erb "Hello! <a href=\"https://github.com/bootstrap-ruby/sinatra-bootstrap\">Original</a> pattern has been modified for <a href=\"http://rubyschool.us/\">Ruby School</a>"			
+	erb "Hello Ruby!"			
 end
 
 get '/about' do
@@ -88,7 +88,6 @@ post '/visit' do
 	@Hairdresser = params[:hairdresser]
   @color = params[:color]
 
-
   hh = {  :name => 'Введите имя',
           :phone => 'Введите номер телефона',
           :datetime => 'Введите дату' }
@@ -99,11 +98,16 @@ post '/visit' do
     return erb :visit
   end
 
+# запись в файл
+#	f = File.open './public/users.txt', 'a'
+#	f.write "Hairdresser:#{@Hairdresser}, User: #{@name}, phone: #{@phone}, Date and time: #{@datetime}! Color: #{@color}\n\n"
+#	f.close
 
-
-	f = File.open './public/users.txt', 'a'
-	f.write "Hairdresser:#{@Hairdresser}, User: #{@name}, phone: #{@phone}, Date and time: #{@datetime}! Color: #{@color}\n\n"
-	f.close
+# запись в базу
+    db = get_db
+    db.execute 'insert into Users (username,phone,datestamp,barber,color)
+                  values (?, ?, ?, ?, ?)',
+                  [@name, @phone, @datetime, @Hairdresser, @color]
 
 	erb "Thank you! Dear, #{@name} we'll be waiting for you at #{@datetime} Your Hairdresser:#{@Hairdresser}! Your color: #{@color}"
 end
@@ -118,7 +122,7 @@ post '/contacts' do
 
 #	erb "Thank you! We'll be write anwser on your e-mail: #{@email}!"
 
-
+# отправка на почту сообщения
 Pony.mail(
   :to => 'komyotpravlyaem@mail.ru',
   :from => params[:email],
@@ -137,3 +141,7 @@ Pony.mail(
 #redirect '/success' 
   erb "Thank you! We'll be write anwser on your e-mail: #{@email}!"
 end
+
+ def get_db
+   return SQLite3::Database.new 'barbershop.db'
+ end
