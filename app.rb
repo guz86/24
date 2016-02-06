@@ -5,6 +5,10 @@ require 'sinatra/reloader'
 require 'pony'
 require 'sqlite3'
 
+ def get_db
+   return SQLite3::Database.new 'barbershop.db'
+ end
+
 configure do 
   db = get_db
   db.execute 'CREATE TABLE IF NOT EXISTS 
@@ -142,6 +146,3 @@ Pony.mail(
   erb "Thank you! We'll be write anwser on your e-mail: #{@email}!"
 end
 
- def get_db
-   return SQLite3::Database.new 'barbershop.db'
- end
