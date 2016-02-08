@@ -6,12 +6,13 @@ require 'pony'
 require 'sqlite3'
 
  def get_db
-   return SQLite3::Database.new 'barbershop.db'
- end
+    db = SQLite3::Database.new 'barbershop.db'
+    db.results_as_hash = true
+    return db
+  end
 
 configure do 
-  db = get_db
-  db.execute 'CREATE TABLE IF NOT EXISTS 
+  get_db.execute 'CREATE TABLE IF NOT EXISTS 
                 "Users" 
                 (
                   "id" INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -108,8 +109,7 @@ post '/visit' do
 #	f.close
 
 # запись в базу
-    db = get_db
-    db.execute 'insert into Users (username,phone,datestamp,barber,color)
+get_db.execute 'insert into Users (username,phone,datestamp,barber,color)
                   values (?, ?, ?, ?, ?)',
                   [@name, @phone, @datetime, @Hairdresser, @color]
 
@@ -144,5 +144,27 @@ Pony.mail(
   })
 #redirect '/success' 
   erb "Thank you! We'll be write anwser on your e-mail: #{@email}!"
+end
+
+#вывод из базы данных плохой вариант
+# db = get_db
+
+# db.execute 'select * from Users' do |row|
+#   print row[1]
+#   print "\t-\t"
+#   puts row[3]
+#   puts '========='
+# end
+
+#вывод из базы данных хороший вариант
+get_db.execute 'select * from Users' do |row|
+  print row['username']
+  print "\t-\t"
+  puts row['datestamp']
+  puts '========='
+end
+
+get '/showusers' do
+
 end
 
