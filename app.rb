@@ -157,14 +157,16 @@ end
 # end
 
 #вывод из базы данных хороший вариант
-get_db.execute 'select * from Users' do |row|
-  print row['username']
-  print "\t-\t"
-  puts row['datestamp']
-  puts '========='
-end
+# get_db.execute 'select * from Users order by id desc' do |row|
+#   print row['username']
+#   print "\t-\t"
+#   puts row['datestamp']
+#   puts '========='
+# end
 
+#вывод из базы данных в представление
 get '/showusers' do
-
+  @results = get_db.execute 'select * from Users order by id desc'
+  erb :showusers
 end
 
