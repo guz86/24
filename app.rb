@@ -5,6 +5,19 @@ require 'sinatra/reloader'
 require 'pony'
 require 'sqlite3'
 
+#для того чтобы добавлялись уникальные парикмахеры в базу
+def is_barber_exists? db, name
+  db.execute('select * from Barbers where name=?',[name]).length > 0
+end
+
+def seed_db db, barbers
+  barbers.each do |barber|
+    if !is_barber_exists? db, barber
+      db.execute 'insert into Barbers (name) values (?)',[barber]
+    end
+  end
+end
+
  def get_db
     db = SQLite3::Database.new 'barbershop.db'
     db.results_as_hash = true
@@ -22,6 +35,14 @@ configure do
                   "barber" TEXT,
                   "color" TEXT
                 )'
+
+  get_db.execute 'CREATE TABLE IF NOT EXISTS 
+                "Barbers" 
+                (
+                  "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+                  "name" TEXT NOT NULL
+                )'
+  seed_db get_db, ['Jessie Pinkman', 'Walter White', 'Gus Fring', 'Mike Erhman']
 end
 
 #sinatra_origin user_login
