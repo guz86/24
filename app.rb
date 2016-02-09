@@ -24,6 +24,11 @@ end
     return db
   end
 
+before do
+  #достаем список парикмахров
+  @hairdressers = get_db.execute 'select * from Barbers'
+end
+
 configure do 
   get_db.execute 'CREATE TABLE IF NOT EXISTS 
                 "Users" 
@@ -134,7 +139,7 @@ get_db.execute 'insert into Users (username,phone,datestamp,barber,color)
                   values (?, ?, ?, ?, ?)',
                   [@name, @phone, @datetime, @Hairdresser, @color]
 
-	erb "Thank you! Dear, #{@name} we'll be waiting for you at #{@datetime} Your Hairdresser:#{@Hairdresser}! Your color: #{@color}"
+	erb "<h2>Thank you! Dear, #{@name} we'll be waiting for you at #{@datetime} Your Hairdresser:#{@Hairdresser}! Your color: #{@color}</h2>"
 end
 
 post '/contacts' do 
